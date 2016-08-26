@@ -1,0 +1,66 @@
+
+{
+    "result": {
+        "total": 10,
+        "rows": [
+            {   
+                "tel":"12345678910",
+                "storeName": "无",
+                "logo": "http://pic45.nipic.com/20140801/9885883_173328069000_2.jpg",
+                "audit": 0,
+                "providerId":1111,
+                "company":"供货商"
+            },
+            {   
+                "tel":"12345678910",
+                "storeName": "无",
+                "logo": "http://pic45.nipic.com/20140801/9885883_173328069000_2.jpg",
+                "audit": 1,
+                "providerId":1111,
+                "company":"供货商"
+            },
+            {   
+                "tel":"12345678910",
+                "storeName": "无",
+                "logo": "http://pic45.nipic.com/20140801/9885883_173328069000_2.jpg",
+                "audit": 1,
+                "providerId":1111,
+                "company":"供货商"
+            },
+            {   
+                "tel":"12345678910",
+                "storeName": "无",
+                "logo": "http://pic45.nipic.com/20140801/9885883_173328069000_2.jpg",
+                "audit": 1,
+                "providerId":1111,
+                "company":"供货商"
+            },
+            {   
+                "tel":"12345678910",
+                "storeName": "无",
+                "logo": "http://pic45.nipic.com/20140801/9885883_173328069000_2.jpg",
+                "audit": 0,
+                "providerId":1111,
+                "company":"供货商"
+            },
+            {   
+                "tel":"12345678910",
+                "storeName": "无",
+                "logo": "http://pic45.nipic.com/20140801/9885883_173328069000_2.jpg",
+                "audit": 0,
+                "providerId":1111,
+                "company":"供货商"
+            },
+            {   
+                "tel":"12345678910",
+                "storeName": "无",
+                "logo": "http://pic45.nipic.com/20140801/9885883_173328069000_2.jpg",
+                "audit": 0,
+                "providerId":1111,
+                "company":"供货商"
+            }
+            
+        ]
+    },
+    "success": true
+}

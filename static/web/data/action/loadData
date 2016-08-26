@@ -1,0 +1,35 @@
+{
+  "success": true,
+  "result": {
+    "brandName": [
+      {
+        "id": 2,
+        "text": "品牌1"
+      },
+      {
+        "id": 3,
+        "text": "品牌2"
+      }
+    ],
+    "cateName": [
+      {
+        "id": 2,
+        "text": "分类1"
+      },
+      {
+        "id": 3,
+        "text": "分类2"
+      }
+    ],
+    "provider": [
+      {
+        "id": 2,
+        "text": "商家1"
+      },
+      {
+        "id": 3,
+        "text": "商家2"
+      }
+    ]
+  }
+}

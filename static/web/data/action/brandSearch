@@ -1,0 +1,51 @@
+
+{
+    "result": {
+        "total": 10,
+        "rows": [
+            {   
+                "brandName": "无",
+                "brandId":"123",
+                "logo": "http://pic45.nipic.com/20140801/9885883_173328069000_2.jpg",
+                "brandSort":"文胸a"
+            },
+            {   
+                "brandName": "无",
+                "brandId":"123",
+                "logo": "http://pic45.nipic.com/20140801/9885883_173328069000_2.jpg",
+                "brandSort":"文胸a"
+            },
+            {   
+                "brandName": "无",
+                "brandId":"123",
+                "logo": "http://pic45.nipic.com/20140801/9885883_173328069000_2.jpg",
+                "brandSort":"文胸a"
+            },
+            {   
+                "brandName": "无",
+                "brandId":"123",
+                "logo": "http://pic45.nipic.com/20140801/9885883_173328069000_2.jpg",
+                "brandSort":"文胸a"
+            },
+            {   
+                "brandName": "无",
+                "brandId":"123",
+                "logo": "http://pic45.nipic.com/20140801/9885883_173328069000_2.jpg",
+                "brandSort":"文胸a"
+            },
+            {   
+                "brandName": "无",
+                "brandId":"123",
+                "logo": "http://pic45.nipic.com/20140801/9885883_173328069000_2.jpg",
+                "brandSort":"文胸a"
+            },
+            {   
+                "brandName": "无",
+                "brandId":"123",
+                "logo": "http://pic45.nipic.com/20140801/9885883_173328069000_2.jpg",
+                "brandSort":"文胸a"
+            }
+        ]
+    },
+    "success": true
+}

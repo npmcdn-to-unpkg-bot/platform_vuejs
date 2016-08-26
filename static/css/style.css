@@ -1,0 +1,278 @@
+@charset "UTF-8";
+/*重置样式*/
+ul, li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/*重置样式 END*/
+/*全局样式*/
+body {
+  padding: 20px;
+}
+
+.table-center th, .table-center td {
+  vertical-align: middle !important;
+  text-align: center !important;
+}
+
+.mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-body {
+  font-size: 22px;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.table caption {
+  text-align: center;
+  font-size: 140%;
+  font-weight: 600;
+}
+
+.table thead th {
+  text-align: center;
+}
+
+th > label, td > label {
+  margin: 0;
+}
+
+tbody td:first-child {
+  text-align: center;
+}
+tbody td:first-child label {
+  margin-left: -34px;
+}
+
+.box-wrap {
+  width: 1200px;
+  margin: 0 auto;
+}
+
+#main-body {
+  position: relative;
+}
+
+#sideNav-wrap {
+  width: 150px;
+  text-align: center;
+  position: relative;
+  border: 1px solid #ccc;
+}
+#sideNav-wrap li {
+  float: none;
+  background: #eee;
+  margin: 0;
+  height: 60px;
+  line-height: 60px;
+  position: relative;
+}
+#sideNav-wrap li > a {
+  padding: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  line-height: 60px;
+}
+#sideNav-wrap li > a:hover {
+  background: #97bee0;
+}
+#sideNav-wrap li.active > a {
+  border: 0;
+  background: #337ab7;
+  color: #fff;
+}
+#sideNav-wrap .dropdown-menu {
+  left: 150px;
+  margin-top: -60px;
+  padding: 0;
+  width: 150px;
+}
+#sideNav-wrap .dropdown-menu li {
+  text-align: center;
+}
+
+.table-responsive {
+  width: 100%;
+  margin-bottom: 15px;
+  overflow-y: hidden;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+  border: 1px solid #ddd;
+}
+
+.table-responsive > .table {
+  margin-bottom: 0;
+}
+
+.table-responsive > .table > tbody > tr > td, .table-responsive > .table > tbody > tr > th, .table-responsive > .table > tfoot > tr > td, .table-responsive > .table > tfoot > tr > th, .table-responsive > .table > thead > tr > td, .table-responsive > .table > thead > tr > th {
+  white-space: nowrap;
+}
+
+.table-responsive > .table-bordered {
+  border: 0;
+}
+
+.table-responsive > .table-bordered > tbody > tr > td:first-child, .table-responsive > .table-bordered > tbody > tr > th:first-child, .table-responsive > .table-bordered > tfoot > tr > td:first-child, .table-responsive > .table-bordered > tfoot > tr > th:first-child, .table-responsive > .table-bordered > thead > tr > td:first-child, .table-responsive > .table-bordered > thead > tr > th:first-child {
+  border-left: 0;
+}
+
+.table-responsive > .table-bordered > tbody > tr > td:last-child, .table-responsive > .table-bordered > tbody > tr > th:last-child, .table-responsive > .table-bordered > tfoot > tr > td:last-child, .table-responsive > .table-bordered > tfoot > tr > th:last-child, .table-responsive > .table-bordered > thead > tr > td:last-child, .table-responsive > .table-bordered > thead > tr > th:last-child {
+  border-right: 0;
+}
+
+.table-responsive > .table-bordered > tbody > tr:last-child > td, .table-responsive > .table-bordered > tbody > tr:last-child > th, .table-responsive > .table-bordered > tfoot > tr:last-child > td, .table-responsive > .table-bordered > tfoot > tr:last-child > th {
+  border-bottom: 0;
+}
+
+.table-responsive caption {
+  border-bottom: 1px solid #ddd;
+}
+
+.table-responsive thead {
+  font-weight: 600;
+}
+
+/*全局样式 END*/
+/*上传*/
+#sideNav-content {
+  position: absolute;
+  top: 0;
+  left: 170px;
+  right: 0;
+}
+#sideNav-content .btn {
+  position: relative;
+}
+#xlf {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  top: 0;
+  bottom: 0;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  opacity: 0;
+  cursor: pointer;
+}
+#out {
+  margin-top: 20px;
+}
+.tab-pane .search-btn {
+  margin-left: 10px;
+}
+.tab-pane .dropdown-menu {
+  max-height: 150px;
+  overflow: auto;
+}
+.tab-pane .dropdown-menu li {
+  padding: 3px 20px;
+  cursor: pointer;
+}
+.tab-pane .dropdown-menu li:hover {
+  background: #337ab7;
+  color: #fff;
+}
+.page-wrap {
+  text-align: center;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+}
+td:last-child .controls:nth-of-type(2) {
+  margin: 0 10px;
+}
+.search-result {
+  display: none;
+}
+.pagination-item {
+  display: none;
+}
+.pagination-item.active {
+  display: table;
+}
+.bt-btn-wrap .operates.disabled {
+  color: #ccc;
+  pointer-events: none;
+}
+#page3 .table-wrap tbody tr td, #page4 .table-wrap tbody tr td {
+  border-color: #337ab7 #ddd #337ab7 #ddd;
+  pointer-events: auto;
+}
+#page3 .table-wrap tbody tr.readonly td, #page4 .table-wrap tbody tr.readonly td {
+  border-color: #ddd;
+  pointer-events: none;
+}
+#page3 .table-wrap tbody tr.readonly td:last-child, #page4 .table-wrap tbody tr.readonly td:last-child {
+  pointer-events: auto;
+}
+
+/*上传 END*/
+/*订单管理*/
+/*订单管理 END*/
+/*商家管理*/
+#page3 .table-wrap tbody tr td, #page4 .table-wrap tbody tr td {
+  border-color: #337ab7 #ddd #337ab7 #ddd;
+  pointer-events: auto;
+}
+#page3 .table-wrap tbody tr td:nth-of-type(3), #page4 .table-wrap tbody tr td:nth-of-type(3) {
+  pointer-events: none;
+}
+#page3 .table-wrap tbody tr.readonly td, #page4 .table-wrap tbody tr.readonly td {
+  border-color: #ddd;
+  pointer-events: none !important;
+}
+#page3 .table-wrap tbody tr.readonly td.controls, #page4 .table-wrap tbody tr.readonly td.controls {
+  pointer-events: auto !important;
+}
+
+.preview {
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  position: relative;
+}
+.preview img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.preview input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
+  opacity: 0;
+}
+
+/*商家管理 END*/
+/**/
+#page4 .table-wrap tbody tr td:nth-of-type(3) {
+  pointer-events: auto;
+}
+#page4 .table-wrap tbody tr td .dropdown {
+  width: 100%;
+}
+#page4 .table-wrap tbody tr td .dropdown button.dropdown-toggle {
+  min-width: 100px;
+}
+#page4 .table-wrap tbody tr td .dropdown .dropdown-menu {
+  left: 50%;
+}
+
+/**/
+
+/*# sourceMappingURL=style.css.map */
