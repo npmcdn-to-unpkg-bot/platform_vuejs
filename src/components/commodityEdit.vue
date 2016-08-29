@@ -50,7 +50,7 @@
      </div>
      <button type="button" @click="search" class="btn btn-primary pull-left search-btn">搜索</button>
      <div class="clearfix"></div>
-     <div class="search-result" style="display:block">
+     <div class="search-result" v-show="trs.length>0">
        <div class="table-wrap table-responsive">
          <table class="table table-bordered pagination-item active">
             <caption>搜索结果</caption>
@@ -180,7 +180,7 @@
         }else{
           this.pageDisabled="";
         }
-        this.$http.get("static/web/data/action/search", { page : val } ).then(function(response){
+        this.$http.get("static/web/data/action/search?page="+val ).then(function(response){
 
         },function(response){
 
@@ -195,8 +195,9 @@
           var data=response.json();
           if(data.success){
             this.trs=data.result.rows;
+            this.pagesTotal=data.result.total;
           }else{
-
+            console.log("搜索失败，请重试");
           }
         },function(response){
           console.log("网络错误");
@@ -245,5 +246,7 @@
 </script>
 
 <style>
-
+  .search-result {
+      display: block;
+  }
 </style>
