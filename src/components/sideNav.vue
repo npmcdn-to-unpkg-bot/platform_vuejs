@@ -14,7 +14,7 @@
         </ul>
      </li>
 
-     <li><a href="#page2" data-toggle="tab">订单管理</a></li>
+     <li><a href="#page2" @click="fn" data-toggle="tab">订单管理</a></li>
      <li><a href="#page3" data-toggle="tab">商家管理</a></li>
      <li><a href="#page4" data-toggle="tab">品牌管理</a></li>
      <li><a href="#page5" data-toggle="tab">营销</a></li>
@@ -31,12 +31,13 @@
         // its initial state.
         msg: 'Hello World!'
       }
+    },
+    methods:{
+      fn:function(){
+        alert(12222);
+      }
     }
   }
-
-  $(function(){
-
-  })
 </script>
 
 <style>
