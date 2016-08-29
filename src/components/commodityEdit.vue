@@ -180,6 +180,12 @@
         }else{
           this.pageDisabled="";
         }
+        this.$http.get("static/web/data/action/search", { page : val } ).then(function(response){
+
+        },function(response){
+
+        });
+
       }
     },
     methods:{
