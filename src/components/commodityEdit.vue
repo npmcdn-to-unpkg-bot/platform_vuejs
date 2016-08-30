@@ -58,7 +58,7 @@
                <tr>
                   <th>
                       <label>
-                       <input type="checkbox" name="selectAll" class="select-all"> 全选
+                       <input type="checkbox" class="select-all" v-model="allChecked"> 全选
                       </label>
                   </th>
                   <th>商品名称</th>
@@ -76,15 +76,15 @@
                </tr>
             </thead>
             <tbody>
-              <tr v-for="tr in trs">
+              <tr v-for="tr in trs" v-bind:data-id="tr.commodityId">
                 <td>
-                  <label><input type="checkbox" name="selectAll"></label>
+                  <label><input type="checkbox" v-bind:checked="allChecked" v-bind:value="{'commodityId':tr.commodityId,'status':tr.status}" v-model="checkedOn"></label>
                 </td>
                 <td v-for="td in tdArr">{{ tr[td] }}</td>
                 <td class="controls">
-                  <a href="javascript:;" class="control-item">编辑</a>&nbsp;&nbsp;
-                  <a href="javascript:;" class="control-item status">下架</a>&nbsp;&nbsp;
-                  <a href="javascript:;" class="control-item">删除</a>
+                  <a href="javascript:;" class="control-item" @click="">编辑</a>&nbsp;&nbsp;
+                  <a href="javascript:;" class="control-item" @click="switchStatus(tr)">{{ tr.status == 0 ? "上架" : "下架"  }}</a>&nbsp;&nbsp;
+                  <a href="javascript:;" class="control-item" @click="deleteCommodity(tr)">删除</a>
                 </td>
               </tr>
             </tbody>
@@ -92,8 +92,8 @@
 
        </div>
        <div class="bt-btn-wrap">
-         <button type="button" class="btn btn-default inline-block operates">批量上架</button>
-         <button type="button" class="btn btn-default inline-block operates">批量删除</button>
+         <button type="button" class="btn btn-default inline-block" @click="switchChose" v-bind:style=" (upOrDown=='请选择' || upOrDown=='重新选择') && {'color':'#aaa','pointer-events':'none'}  ">{{ upOrDown }}</button>
+         <button type="button" class="btn btn-default inline-block" @click="deleteChose">批量删除</button>
        </div>
        <div class="page-wrap">
          <ul class="pagination">
@@ -110,8 +110,8 @@
 <script>
   var Vue = require('vue');
   var VueResource = require('vue-resource');
-
   Vue.use(VueResource);
+
   export default {
     data () {
       return {
@@ -120,16 +120,24 @@
         // preserves its current state and we are modifying
         // its initial state.
 
-        //下拉列表选项
+      //下拉列表选项
         brandNames:[{id: 1,text: "品牌1"}, {id: 2,text: "品牌2"}],
         sorts:[],
         providers:[],
-        //搜索结果列表
-        //数据的排列顺序
+      //搜索结果列表
+        //全选框
+        allChecked:false,
+        //选中的行
+        checkedOn:[],
+        checkedIds:[],
+        checkedStatus:[],
+        //请求得到的行数据
         trs:[],
         //控制单元格数据的显示顺序
         tdArr:["commodityName","cateName","commodityNo","provider","brandName","manuStyle","postFee","price","minNum","stocks","commodityDesc"],
-
+      //批量操作:
+        //批量上、下架
+        upOrDown:"请选择",
       //分页
         //总共的页数
         pagesTotal:18,
@@ -172,6 +180,7 @@
         // ajax
         console.log(this.pageNth);
       },
+      //页码改变事件
       pageNth:function(val,oldVal){
         if( val === 1){
           this.pageDisabled="prev";
@@ -181,17 +190,53 @@
           this.pageDisabled="";
         }
         this.$http.get("static/web/data/action/search?page="+val ).then(function(response){
-
+          var data=response.json();
+          if(data.success){
+            console.log("翻页成功");
+            this.trs=data.result.rows;
+            this.pagesTotal=data.result.total;
+          }else{
+            //可以加个图片提示错误
+            console.log("翻页失败，请稍后重试");
+          }
         },function(response){
-
+          console.log("网络错误");
         });
-
+      },
+      checkedOn:function(val,oldVal){
+        this.checkedIds=[];
+        this.checkedStatus=[];
+        for(var i=0,len=val.length;i<len;i++){
+          this.checkedIds.push(val[i].commodityId);
+          this.checkedStatus.push(val[i].status);
+        }
+      },
+      checkedStatus:function(val,oldVal){
+        var status=val[0];
+        var len=val.length;
+        if(len===0){
+          this.upOrDown="请选择";
+          return;
+        }
+        if( val.join("").split(status).length==len+1 ){
+          //选中的全部为要上架或要下架的商品
+          if(status==0){
+            //0表示要上架的
+            this.upOrDown="批量上架";
+          }else if(status==1){
+            //1表示要下架的
+            this.upOrDown="批量下架";
+          }
+        }else{
+          this.upOrDown="重新选择";
+        }
       }
+
     },
     methods:{
       //搜索
       search:function(){
-        this.$http.get("static/web/data/action/search").then(function(response){
+        this.$http.get("/static/web/data/action/search").then(function(response){
           var data=response.json();
           if(data.success){
             this.trs=data.result.rows;
@@ -202,6 +247,9 @@
         },function(response){
           console.log("网络错误");
         });
+      },
+      alert:function(tr){
+        alert (tr.commodityId);
       },
       //切换页码
       switchPage:function(agr){
@@ -239,6 +287,81 @@
         }else{
           this.pageActive=agr;
         }
+      },
+      //批量上、下架
+      switchChose:function(){
+        var url;
+        var checkedIds=this.checkedIds;
+        var checkedStatus=this.checkedStatus;
+        if(checkedStatus[0]==0){
+          //批量上架
+          url="/static/web/data/action/onshiefCommodity";
+        }else{
+          //批量下架
+          url="/static/web/data/action/offshiefCommodity";
+        }
+        this.$http.get(url+"?commodityIds="+checkedIds.join(",")).then(function(response){
+          var data=response.json();
+          if(data.success){
+            console.log("操作成功");
+
+          }else{
+            console.log("操作失败，请稍后重试");
+          }
+        },function(response){
+          console.log("网络错误");
+        })
+      },
+      //批量删除
+      deleteChose:function(){
+        this.$http.get("/static/web/data/action/onshiefCommodity?commodityIds="+this.checkedIds.join(",")).then(function(response){
+          var data=response.json();
+          if(data.success){
+            console.log("操作成功");
+          }else{
+            console.log("操作失败，请稍后重试");
+          }
+        },function(response){
+          console.log("网络错误");
+        })
+      },
+    //单个商品操作
+      //切换上、下架
+      switchStatus:function(tr){
+        var url;
+        if(tr.status==0){
+          //批量上架
+          url="/static/web/data/action/onshiefCommodity";
+        }else if(tr.status==1){
+          //批量下架
+          url="/static/web/data/action/offshiefCommodity";
+        }
+        this.$http.get(url+"?commodityIds="+tr.commodityId).then(function(response){
+          var data=response.json();
+          if(data.success){
+            console.log("操作成功");
+            //操作成功后，修改商品状态
+            tr.status=1-tr.status;
+          }else{
+            console.log("操作失败，请稍后重试");
+          }
+        },function(response){
+          console.log("网络错误");
+        })
+      },
+      //删除
+      deleteCommodity:function(tr){
+        this.$http.get("/static/web/data/action/deleteCommodity?commodityIds="+tr.commodityId).then(function(response){
+          var data=response.json();
+          if(data.success){
+            console.log("操作成功");
+
+          }else{
+            console.log("操作失败，请稍后重试");
+          }
+        },function(response){
+          console.log("网络错误");
+        })
       }
     }
   }
