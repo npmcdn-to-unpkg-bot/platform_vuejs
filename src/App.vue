@@ -1,6 +1,6 @@
 <template>
   <!-- 左侧导航栏 -->
-  <side-nav></side-nav>
+  <side-nav :pages="pages"></side-nav>
 
   <div id="sideNav-content" class="tab-content">
     <!-- 商品管理 -->
@@ -50,11 +50,22 @@ import brandManage from './components/brandManage';
 export default {
   components: {
     sideNav,commodityManage,orderManage,providerManage,brandManage
+  },
+  data () {
+    return{
+      pages:[
+              { id:"page1",text:"商品管理",dropdown:[ {id:"page1_1",text:"商品上传"},{ id:"page1_2",text:"商品编辑" } ] } ,
+              { id:"page2",text:"订单管理" } ,
+              { id:"page3",text:"商家管理" } ,
+              { id:"page4",text:"品牌管理" } ,
+              { id:"page5",text:"营销" }
+            ]
+    }
   }
 }
 //当前组件脚本
 $(function(){
-  
+
 
 });
 </script>

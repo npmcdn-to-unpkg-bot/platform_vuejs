@@ -236,7 +236,8 @@
     methods:{
       //搜索
       search:function(){
-        this.$http.get("/static/web/data/action/search").then(function(response){
+        var vm=this;
+        this.$http.get("/static/web/data/action/search?"+"brandName="+11+"&"+"cateName="+11+"&"+"provider="+11+"&"+"status="+11+"&"+"keyword="+11).then(function(response){
           var data=response.json();
           if(data.success){
             this.trs=data.result.rows;
