@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-pane fade clearfix" id="page1_2">
+  <div class="tab-pane fade clearfix" :class="{ 'in': activepage=='page1_2', 'active': activepage=='page1_2' }" id="page1_2">
      <div class="dropdown inline-block">
        <button class="btn btn-default dropdown-toggle search-item" data-sign="brandName" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
          全部品牌
@@ -113,6 +113,7 @@
   Vue.use(VueResource);
 
   export default {
+    props:['activepage'],
     data () {
       return {
         // note: changing this line won't causes changes
@@ -369,8 +370,7 @@
 
 </script>
 
-<style>
-  .search-result {
-      display: block;
-  }
+<!-- scoped表示只在此模块中应用该样式 -->
+<style lang="scss" scoped>
+
 </style>

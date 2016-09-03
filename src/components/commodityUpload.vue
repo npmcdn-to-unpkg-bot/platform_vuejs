@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-pane fade in active" id="page1_1">
+  <div class="tab-pane fade" :class="{ 'in': activepage=='page1_1', 'active': activepage=='page1_1' }" id="page1_1" >
     <div class="pull-left">
       <input type="text" id="fileName" class="pull-left">
     </div>
@@ -14,17 +14,18 @@
 </template>
 
 <script>
-  // export default {
-  //   data () {
-  //     return {
-  //       // note: changing this line won't causes changes
-  //       // with hot-reload because the reloaded component
-  //       // preserves its current state and we are modifying
-  //       // its initial state.
-  //       msg: 'Hello World!'
-  //     }
-  //   }
-  // }
+  export default {
+    props:['activepage'],
+    data () {
+      return {
+        // note: changing this line won't causes changes
+        // with hot-reload because the reloaded component
+        // preserves its current state and we are modifying
+        // its initial state.
+        msg: 'Hello World!'
+      }
+    }
+  }
   // debugger;
   // console.log( $("#myModal") instanceof jQuery);
   $(function(){
@@ -410,7 +411,7 @@
       }
 
     });
-    
+
   })
 </script>
 
