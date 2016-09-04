@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-pane fade" id="page4">
+  <div class="tab-pane fade" :class="{ 'in': activepage=='page4', 'active': activepage=='page4' }" id="page4">
      <div class="form-group pull-left">
         <input type="text" class="form-control search-input" placeholder="关键字检索品牌">
      </div>
@@ -35,7 +35,13 @@
 </template>
 
 <script>
-
+  export default {
+    props:['activepage'],
+    data () {
+      return {
+      }
+    }
+  }
 </script>
 
 <style>

@@ -155,6 +155,22 @@
       }
     },
     computed:{
+      //全选
+      allChecked:{
+        get:function(){
+
+        },
+        set:function(val){
+
+        }
+      },
+      //选中的数量
+      selectCount:{
+        get:function(){
+          var i=0;
+          
+        }
+      },
       //能完整显示页码的页码页数
       pagesFull:function(){
         return Math.floor( this.pagesTotal / this.pageNum );
@@ -240,6 +256,7 @@
         var vm=this;
         this.$http.get("/static/web/data/action/search?"+"brandName="+11+"&"+"cateName="+11+"&"+"provider="+11+"&"+"status="+11+"&"+"keyword="+11).then(function(response){
           var data=response.json();
+          console.log(data);
           if(data.success){
             this.trs=data.result.rows;
             this.pagesTotal=data.result.total;
@@ -372,5 +389,7 @@
 
 <!-- scoped表示只在此模块中应用该样式 -->
 <style lang="scss" scoped>
-
+  .search-result{
+    display: block;
+  }
 </style>

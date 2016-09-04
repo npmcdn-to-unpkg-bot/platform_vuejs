@@ -1,9 +1,9 @@
 <template>
-  <div class="tab-pane fade" id="page3">
+  <div class="tab-pane fade" :class="{ 'in': activepage=='page3', 'active': activepage=='page3' }" id="page3">
      <div class="form-group pull-left">
         <input type="text" class="form-control search-input search-item" data-sign="keyword" placeholder="关键字检索商家">
      </div>
-     <div class="dropdown pull-left open" id="audit_select">
+     <div class="dropdown pull-left">
        <button class="btn btn-default dropdown-toggle search-item" data-sign="audit" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
          全部
          <span class="caret"></span>
@@ -14,7 +14,7 @@
          <li>已审核</li>
        </ul>
      </div>
-     <div class="dropdown pull-left open" id="audit_select">
+     <div class="dropdown pull-left">
        <button class="btn btn-default dropdown-toggle search-item" data-sign="company" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
          供货商
          <span class="caret"></span>
@@ -57,7 +57,13 @@
 </template>
 
 <script>
-
+  export default {
+    props:['activepage'],
+    data () {
+      return {
+      }
+    }
+  }
 </script>
 
 <style>

@@ -64,7 +64,7 @@ export default {
               { id:"page4",text:"品牌管理" } ,
               { id:"page5",text:"营销" }
             ],
-      activepage:"page1_2"
+      activepage:"page1_1"
     }
   },
   events:{
@@ -74,6 +74,21 @@ export default {
 
 </script>
 
-<style>
-
+<style lang="scss">
+  .page-nav,.page-navs{
+    cursor: pointer;
+    color:#337ab7;
+    &.active{
+      background:#337ab7 !important;
+      color:#fff !important;
+    }
+    &:not(.active):hover{
+      background:#669fcc !important;
+    }
+  }
+  .dropdown-menu{
+    &.show{
+      display: block !important;
+    }
+  }
 </style>

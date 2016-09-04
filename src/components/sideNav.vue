@@ -55,20 +55,5 @@
 </script>
 
 <style lang="scss">
-  .page-nav,.page-navs{
-    cursor: pointer;
-    color:#337ab7;
-    &.active{
-      background:#337ab7 !important;
-      color:#fff !important;
-    }
-    &:not(.active):hover{
-      background:#669fcc !important;
-    }
-  }
-  .dropdown-menu{
-    &.show{
-      display: block !important;
-    }
-  }
+
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="tab-pane fade" id="page2">
+  <div class="tab-pane fade" :class="{ 'in': activepage=='page2', 'active': activepage=='page2' }" id="page2">
      <div class="dropdown inline-block" >
        <button class="btn btn-default dropdown-toggle search-item" data-sign="provider" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
          全部商家
@@ -61,13 +61,9 @@
 
 <script>
   export default {
+    props:['activepage'],
     data () {
       return {
-        // note: changing this line won't causes changes
-        // with hot-reload because the reloaded component
-        // preserves its current state and we are modifying
-        // its initial state.
-        msg: 'Hello World!'
       }
     }
   }
