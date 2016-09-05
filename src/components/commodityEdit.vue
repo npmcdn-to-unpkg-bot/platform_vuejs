@@ -58,7 +58,7 @@
                <tr>
                   <th>
                       <label>
-                       <input type="checkbox" class="select-all" v-model="allChecked"> 全选
+                       <input type="checkbox" class="select-all" v-model="selectAll"> 全选
                       </label>
                   </th>
                   <th>商品名称</th>
@@ -78,7 +78,9 @@
             <tbody>
               <tr v-for="tr in trs" v-bind:data-id="tr.commodityId">
                 <td>
-                  <label><input type="checkbox" v-bind:checked="allChecked" v-bind:value="{'commodityId':tr.commodityId,'status':tr.status}" v-model="checkedOn"></label>
+                  <!-- <label><input type="checkbox" v-bind:checked="allChecked" v-bind:value="{'commodityId':tr.commodityId,'status':tr.status}" v-model="checkedOn"></label> -->
+                  <label><input type="checkbox" v-bind:value=" tr.commodityId +'&'+ tr.status " v-model="checkedOn"></label>
+                  <!-- <label><input type="checkbox" v-bind:value=" JSON.stringify ( {'commodityId':tr.commodityId,'status':tr.status} ) " v-model="checkedOn"></label> -->
                 </td>
                 <td v-for="td in tdArr">{{ tr[td] }}</td>
                 <td class="controls">
@@ -121,6 +123,7 @@
         // preserves its current state and we are modifying
         // its initial state.
 
+        bool:true,
       //下拉列表选项
         brandNames:[{id: 1,text: "品牌1"}, {id: 2,text: "品牌2"}],
         sorts:[],
@@ -155,20 +158,27 @@
       }
     },
     computed:{
-      //全选
-      allChecked:{
-        get:function(){
-
+      // 全选checkbox绑定的model
+      selectAll: {
+        get: function() {
+          return this.checkedCount == this.trs.length;
         },
-        set:function(val){
-
+        set: function(value) {
+          if (value) {
+            this.checkedOn = this.trs.map(function(item) {
+              return JSON.stringify( {
+                'commodityId':item.commodityId,
+                'status':item.status
+              } );
+            })
+          } else {
+            this.checkedOn = [];
+          }
         }
       },
-      //选中的数量
-      selectCount:{
-        get:function(){
-          var i=0;
-          
+      checkedCount: {
+        get: function() {
+          return this.checkedOn.length;
         }
       },
       //能完整显示页码的页码页数
@@ -193,6 +203,17 @@
       }
     },
     watch:{
+      allChecked:function(val,oldVal){
+        var vm=this;
+        // vm.trs.forEach(function(item,index,array){
+        //   vm.checkedOn.$remove(item);
+        // });
+        if(val==true){
+          vm.trs.forEach(function(item,index,array){
+            vm.checkedOn.push(item);
+          });
+        }
+      },
       pageActive:function(val,oldVal){
         // ajax
         console.log(this.pageNth);
@@ -223,10 +244,12 @@
       checkedOn:function(val,oldVal){
         this.checkedIds=[];
         this.checkedStatus=[];
+
         for(var i=0,len=val.length;i<len;i++){
-          this.checkedIds.push(val[i].commodityId);
-          this.checkedStatus.push(val[i].status);
+          this.checkedIds.push( JSON.parse( val[i] ).commodityId );
+          this.checkedStatus.push( JSON.parse( val[i] ).status );
         }
+
       },
       checkedStatus:function(val,oldVal){
         var status=val[0];
@@ -259,6 +282,9 @@
           console.log(data);
           if(data.success){
             this.trs=data.result.rows;
+            this.trs.forEach(function(item,index,array){
+              item.checked=false;
+            })
             this.pagesTotal=data.result.total;
           }else{
             console.log("搜索失败，请重试");
