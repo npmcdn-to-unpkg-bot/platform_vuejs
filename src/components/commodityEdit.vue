@@ -1,6 +1,7 @@
 <template>
   <div class="tab-pane fade clearfix" :class="{ 'in': activepage=='page1_2', 'active': activepage=='page1_2' }" id="page1_2">
-     <div class="dropdown inline-block">
+     <dropdown :default-opt='{id:0,text:"默认选项"}' :lists='[{id:1,text:"选项1"},{id:2,text:"选项2"}]' :wrap-cls='["inline-block"]'></dropdown>
+     <!-- <div class="dropdown inline-block">
        <button class="btn btn-default dropdown-toggle search-item" data-sign="brandName" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
          全部品牌
          <span class="caret"></span>
@@ -9,7 +10,7 @@
          <li data-id="0">全部品牌</li>
          <li v-for="brandName in brandNames" v-bind:data-id="brandName.id">{{ brandName.text }}</li>
        </ul>
-     </div>
+     </div> -->
      <div class="dropdown inline-block">
        <button class="btn btn-default dropdown-toggle search-item" data-sign="cateName" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
          全部分类
@@ -78,9 +79,7 @@
             <tbody>
               <tr v-for="tr in trs" v-bind:data-id="tr.commodityId">
                 <td>
-                  <!-- <label><input type="checkbox" v-bind:checked="allChecked" v-bind:value="{'commodityId':tr.commodityId,'status':tr.status}" v-model="checkedOn"></label> -->
-                  <label><input type="checkbox" v-bind:value=" tr.commodityId +'&'+ tr.status " v-model="checkedOn"></label>
-                  <!-- <label><input type="checkbox" v-bind:value=" JSON.stringify ( {'commodityId':tr.commodityId,'status':tr.status} ) " v-model="checkedOn"></label> -->
+                  <label><input type="checkbox" v-bind:value=' {"commodityId":tr.commodityId,"status":tr.status} | json 0 ' v-model="checkedOn"></label>
                 </td>
                 <td v-for="td in tdArr">{{ tr[td] }}</td>
                 <td class="controls">
@@ -114,16 +113,16 @@
   var VueResource = require('vue-resource');
   Vue.use(VueResource);
 
+  //组件注册和引用
+  import dropdown from './thumbs/dropdown';
   export default {
+    components: {
+      dropdown
+    },
     props:['activepage'],
     data () {
       return {
-        // note: changing this line won't causes changes
-        // with hot-reload because the reloaded component
-        // preserves its current state and we are modifying
-        // its initial state.
 
-        bool:true,
       //下拉列表选项
         brandNames:[{id: 1,text: "品牌1"}, {id: 2,text: "品牌2"}],
         sorts:[],
@@ -166,10 +165,12 @@
         set: function(value) {
           if (value) {
             this.checkedOn = this.trs.map(function(item) {
-              return JSON.stringify( {
+              //保存json字符串格式
+              return JSON.stringify({
                 'commodityId':item.commodityId,
                 'status':item.status
-              } );
+              });
+
             })
           } else {
             this.checkedOn = [];
