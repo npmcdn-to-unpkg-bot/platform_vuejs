@@ -1,53 +1,13 @@
 <template>
   <div class="tab-pane fade clearfix" :class="{ 'in': activepage=='page1_2', 'active': activepage=='page1_2' }" id="page1_2">
-     <dropdown :default-opt='{id:0,text:"默认选项"}' :lists='[{id:1,text:"选项1"},{id:2,text:"选项2"}]' :wrap-cls='["inline-block"]'></dropdown>
-     <!-- <div class="dropdown inline-block">
-       <button class="btn btn-default dropdown-toggle search-item" data-sign="brandName" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-         全部品牌
-         <span class="caret"></span>
-       </button>
-       <ul class="dropdown-menu">
-         <li data-id="0">全部品牌</li>
-         <li v-for="brandName in brandNames" v-bind:data-id="brandName.id">{{ brandName.text }}</li>
-       </ul>
-     </div> -->
-     <div class="dropdown inline-block">
-       <button class="btn btn-default dropdown-toggle search-item" data-sign="cateName" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-         全部分类
-         <span class="caret"></span>
-       </button>
-       <ul class="dropdown-menu">
-         <li data-id="0">全部分类</li>
-         <li v-for="sort in sorts" v-bind:data-id="sort.id">{{ sort.text }}</li>
-       </ul>
-     </div>
-     <div class="dropdown inline-block">
-       <button class="btn btn-default dropdown-toggle search-item" data-sign="provider" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-         全部商家
-         <span class="caret"></span>
-       </button>
-       <ul class="dropdown-menu">
-         <li data-id="0">全部商家</li>
-         <li v-for="provider in providers" v-bind:data-id="provider.id">{{ provider.text }}</li>
-       </ul>
-     </div>
-     <div class="dropdown inline-block">
-       <button class="btn btn-default dropdown-toggle search-item" data-sign="status" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-         全部
-         <span class="caret"></span>
-       </button>
-       <ul class="dropdown-menu">
-         <li data-id="0">全部</li>
-         <li data-id="1">出售中</li>
-         <li data-id="2">仓库中</li>
-         <li data-id="3">已卖完</li>
-       </ul>
-     </div>
+     <dropdown :selected.sync='brandNames.selected' :default-opt='brandNames.default' :options='brandNames.options' :wrap-cls='["inline-block"]'></dropdown>
+     <dropdown :selected.sync='sorts.selected' :default-opt='sorts.default' :options='sorts.options' :wrap-cls='["inline-block"]'></dropdown>
+     <dropdown :selected.sync='providers.selected' :default-opt='providers.default' :options='providers.options' :wrap-cls='["inline-block"]'></dropdown>
+     <dropdown :selected.sync='statuses.selected' :default-opt='statuses.default' :options='statuses.options' :wrap-cls='["inline-block"]'></dropdown>
      <br>
      <br>
      <div class="form-group pull-left">
-        <input type="text" class="form-control search-input search-item" data-sign="keyword"
-           placeholder="关键词（款号，商品名称）">
+        <input type="text" class="form-control" v-model="keyword" placeholder="关键词（款号，商品名称）">
      </div>
      <button type="button" @click="search" class="btn btn-primary pull-left search-btn">搜索</button>
      <div class="clearfix"></div>
@@ -62,18 +22,7 @@
                        <input type="checkbox" class="select-all" v-model="selectAll"> 全选
                       </label>
                   </th>
-                  <th>商品名称</th>
-                  <th>一级分类</th>
-                  <th>款号</th>
-                  <th>商家</th>
-                  <th>品牌</th>
-                  <th>生成方式</th>
-                  <th>邮费</th>
-                  <th>吊牌价</th>
-                  <th>最低起批量</th>
-                  <th>库存值</th>
-                  <th>商品描述</th>
-                  <th>操作</th>
+                  <th v-for='list in ["商品名称","一级分类","款号","商家","品牌","生成方式","邮费","吊牌价","最低起批量","库存值","商品描述","操作"]'>{{list}}</th>
                </tr>
             </thead>
             <tbody>
@@ -122,11 +71,12 @@
     props:['activepage'],
     data () {
       return {
-
-      //下拉列表选项
-        brandNames:[{id: 1,text: "品牌1"}, {id: 2,text: "品牌2"}],
-        sorts:[],
-        providers:[],
+      //搜索选项
+        brandNames:{ default:{id: 0,text: "全部品牌"},options:[{id: 1,text: "品牌1"},{id: 2,text: "品牌2"}],selected:{id: 0,text: "全部品牌"}},
+        sorts:{ default:{id: 0,text: "全部分类"},options:[{id: 1,text: "分类1"},{id: 2,text: "分类2"}],selected:{id: 0,text: "全部分类"} },
+        providers:{ default:{id: 0,text: "全部商家"},options:[{id: 1,text: "商家1"},{id: 2,text: "商家2"}],selected:{id: 0,text: "全部商家"} },
+        statuses:{ default:{id: 0,text: "全部"},options:[{id: 1,text: "出售中"},{id: 2,text: "仓库中"},{id: 2,text: "仓库中"}],selected:{id: 0,text: "全部"} },
+        keyword:"",
       //搜索结果列表
         //全选框
         allChecked:false,
@@ -194,9 +144,10 @@
       pageDisabled:function(){
         if(this.pageNth===1){
           return "prev";
-        }else if(this.pageNth===18){
+        }else if(this.pageNth===this.pagesTotal){
           return "next";
         }
+        return "";
       },
       //当前的页码
       pageNth:function(){
@@ -221,13 +172,6 @@
       },
       //页码改变事件
       pageNth:function(val,oldVal){
-        if( val === 1){
-          this.pageDisabled="prev";
-        }else if(val === this.pagesTotal){
-          this.pageDisabled="next";
-        }else{
-          this.pageDisabled="";
-        }
         this.$http.get("static/web/data/action/search?page="+val ).then(function(response){
           var data=response.json();
           if(data.success){
@@ -278,7 +222,7 @@
       //搜索
       search:function(){
         var vm=this;
-        this.$http.get("/static/web/data/action/search?"+"brandName="+11+"&"+"cateName="+11+"&"+"provider="+11+"&"+"status="+11+"&"+"keyword="+11).then(function(response){
+        this.$http.get("/static/web/data/action/search?"+"brandName="+this.brandNames.selected.text+"&"+"cateName="+this.sorts.selected.text+"&"+"provider="+this.providers.selected.text+"&"+"status="+this.statuses.selected.text+"&"+"keyword="+this.keyword).then(function(response){
           var data=response.json();
           console.log(data);
           if(data.success){
