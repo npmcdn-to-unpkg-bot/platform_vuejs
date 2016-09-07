@@ -1,6 +1,7 @@
 <template>
   <div class="tab-pane fade" :class="{ 'in': activepage=='page2', 'active': activepage=='page2' }" id="page2">
-     <div class="dropdown inline-block" >
+     <dropdown :selected.sync='providers.selected' :default-opt='providers.default' :options='providers.options' :wrap-cls='["inline-block"]'></dropdown>
+     <!-- <div class="dropdown inline-block" >
        <button class="btn btn-default dropdown-toggle search-item" data-sign="provider" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
          全部商家
          <span class="caret"></span>
@@ -8,8 +9,9 @@
        <ul class="dropdown-menu">
          <li data-id="0">全部商家</li>
        </ul>
-     </div>
-     <div class="dropdown inline-block">
+     </div> -->
+     <dropdown :selected.sync='orderStatus.selected' :default-opt='orderStatus.default' :options='orderStatus.options' :wrap-cls='["inline-block"]'></dropdown>
+     <!-- <div class="dropdown inline-block">
        <button class="btn btn-default dropdown-toggle search-item" data-sign="order" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
          全部订单
          <span class="caret"></span>
@@ -17,7 +19,7 @@
        <ul class="dropdown-menu">
          <li data-id="0">全部订单</li>
        </ul>
-     </div>
+     </div> -->
      <div class="form-group inline-block">
         <input type="date" class="form-control search-item" data-sign="start">
      </div>  开始时间
@@ -32,13 +34,7 @@
             <caption>搜索结果</caption>
             <thead>
                <tr>
-                  <th>供货商</th>
-                  <th>订单号</th>
-                  <th>订单金额</th>
-                  <th>订单状态</th>
-                  <th>采购商</th>
-                  <th>付款时间</th>
-                  <th>邀请码</th>
+                 <th v-for='list in ["供货商","订单号","订单金额","订单状态","采购商","付款时间","邀请码"]'>{{list}}</th>
                </tr>
             </thead>
             <tbody>
@@ -60,10 +56,19 @@
 </template>
 
 <script>
+
+  //组件注册和引用
+  import dropdown from './thumbs/dropdown';
+
   export default {
+    components: {
+      dropdown
+    },
     props:['activepage'],
     data () {
       return {
+        providers:{ default:{id: 0,text: "全部商家"},options:[{id: 1,text: "商家1"},{id: 2,text: "商家2"}],selected:{id: 0,text: "全部商家"}},
+        orderStatus:{ default:{id: 0,text: "全部状态"},options:[{id: 1,text: "状态1"},{id: 2,text: "状态2"}],selected:{id: 0,text: "全部状态"}}
       }
     }
   }

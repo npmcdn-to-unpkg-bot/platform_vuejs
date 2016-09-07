@@ -58,12 +58,14 @@
 </template>
 
 <script>
+  //插件引入
   var Vue = require('vue');
   var VueResource = require('vue-resource');
   Vue.use(VueResource);
 
   //组件注册和引用
   import dropdown from './thumbs/dropdown';
+
   export default {
     components: {
       dropdown
