@@ -52,7 +52,7 @@
            <li class="next" :class="{'disabled': pageDisabled==='next' }"  @click="switchPage('next')"><a href="javascript:;">&raquo;</a></li>
          </ul>
        </div> -->
-       <pager :pages-total.sync='pagesTotal' :page-num.sync='pageNum' :page-nth.sync='pageNth' ></pager>
+       <pager :pages-total='pagesTotal' :page-num='pageNum' :page-nth.sync='pageNth' ></pager>
 
      </div>
   </div>

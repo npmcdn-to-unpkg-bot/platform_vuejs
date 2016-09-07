@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  props:{'pagesTotal':null,'pageNum':{default:8},'pageNth':null},
+  props:{'pagesTotal':null,'pageNum':{default:10},'pageNth':{default:1}},
   data() {
     return {
     };
@@ -31,7 +31,6 @@ export default {
     },
     //当前页码在当前显示的所有页码的index+1
     pageActive:function(){
-      console.log(this.pageNth);
       return ( this.pageNth % this.pageNum || this.pageNum );
     },
     //最后显示的页码数目
@@ -44,13 +43,12 @@ export default {
     }
 
   },
-  ready() {},
-  attached() {},
   methods: {
     //切换页码
     switchPage:function(agr){
       var pagesTotal=this.pagesTotal;
       var pageNth=this.pageNth;
+      var pagesNth=this.pagesNth;
       var pageNum=this.pageNum;
       var pageActive=this.pageActive;
       var pageDisabled=this.pageDisabled;
@@ -59,12 +57,6 @@ export default {
         if(pageNth===1){
           return;
         }
-        if(pageActive % pageNum === 1 ){
-          this.pagesNth--;
-          this.pageActive=pageNum;
-        }else{
-          this.pageActive--;
-        }
         //当前页码更新
         this.pageNth--;
       }else if(agr=="next"){
@@ -72,22 +64,16 @@ export default {
         if(pageNth===pagesTotal){
           return;
         }
-        if(pageActive % pageNum === 0 ){
-          this.pagesNth++;
-          this.pageActive=1;
-        }else {
-          this.pageActive++;
-        }
         //当前页码更新
         this.pageNth++;
       }else{
-        this.pageActive=agr;
+        this.pageNth=agr+( pagesNth-1 )*pageNum;
       }
     }
   }
-  
+
 };
 </script>
 
-<style lang="css">
+<style lang="scss">
 </style>
