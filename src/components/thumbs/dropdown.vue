@@ -1,4 +1,4 @@
-<template id="dropdown">
+<template>
   <div class="dropdown" :class="wrapCls"  @click="wrapClick">
     <button type="button" class="btn btn-default" :class="buttonCls">
       {{selected.text}}

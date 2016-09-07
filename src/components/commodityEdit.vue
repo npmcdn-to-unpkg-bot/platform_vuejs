@@ -45,13 +45,14 @@
          <button type="button" class="btn btn-default inline-block" @click="switchChose" v-bind:style=" (upOrDown=='请选择' || upOrDown=='重新选择') && {'color':'#aaa','pointer-events':'none'}  ">{{ upOrDown }}</button>
          <button type="button" class="btn btn-default inline-block" @click="deleteChose">批量删除</button>
        </div>
-       <div class="page-wrap">
+       <!-- <div class="page-wrap">
          <ul class="pagination">
            <li class="prev" :class="{'disabled': pageDisabled==='prev' }" @click="switchPage('prev')"><a href="javascript:;">&laquo;</a></li>
-           <li v-for="n in pageNum " :class="{'active': ( n+1 ) === pageActive }" v-show="!(pagesNth===pagesFull+1 && (n+1)>pagesLast)" @click="switchPage(n+1)"><a href="javascript:;">{{ (n + 1) + ( pagesNth-1 )*pageNum }}</a></li>
+           <li v-for="n in pageNum " :class="{'active': ( n+1 ) === pageActive }" v-show="!(pagesNth===pagesFull+1 && (n+1)>pagesExtra)" @click="switchPage(n+1)"><a href="javascript:;">{{ (n + 1) + ( pagesNth-1 )*pageNum }}</a></li>
            <li class="next" :class="{'disabled': pageDisabled==='next' }"  @click="switchPage('next')"><a href="javascript:;">&raquo;</a></li>
          </ul>
-       </div>
+       </div> -->
+       <pager :pages-total.sync='pagesTotal' :page-num.sync='pageNum' :page-nth.sync='pageNth' ></pager>
 
      </div>
   </div>
@@ -65,21 +66,22 @@
 
   //组件注册和引用
   import dropdown from './thumbs/dropdown';
+  import pager from './thumbs/pager';
 
   export default {
     components: {
-      dropdown
+      dropdown,pager
     },
     props:['activepage'],
     data () {
       return {
-      //搜索选项
+      /*搜索选项*/
         brandNames:{ default:{id: 0,text: "全部品牌"},options:[{id: 1,text: "品牌1"},{id: 2,text: "品牌2"}],selected:{id: 0,text: "全部品牌"}},
         sorts:{ default:{id: 0,text: "全部分类"},options:[{id: 1,text: "分类1"},{id: 2,text: "分类2"}],selected:{id: 0,text: "全部分类"} },
         providers:{ default:{id: 0,text: "全部商家"},options:[{id: 1,text: "商家1"},{id: 2,text: "商家2"}],selected:{id: 0,text: "全部商家"} },
         statuses:{ default:{id: 0,text: "全部"},options:[{id: 1,text: "出售中"},{id: 2,text: "仓库中"},{id: 2,text: "仓库中"}],selected:{id: 0,text: "全部"} },
         keyword:"",
-      //搜索结果列表
+      /*搜索结果列表*/
         //全选框
         allChecked:false,
         //选中的行
@@ -90,22 +92,16 @@
         trs:[],
         //控制单元格数据的显示顺序
         tdArr:["commodityName","cateName","commodityNo","provider","brandName","manuStyle","postFee","price","minNum","stocks","commodityDesc"],
-      //批量操作:
+      /*批量操作*/
         //批量上、下架
         upOrDown:"请选择",
-      //分页
+      /*分页*/
         //总共的页数
-        pagesTotal:18,
+        pagesTotal:"",
         //当前最多可显示的页码数
         pageNum:10,
-        //当前页码所处的第几分页组
-        pagesNth:1,
-        //当前页码在当前显示的所有页码的index
-        pageActive:1,
-        //控制前后翻页的禁用状态
-        pageDisabled:"prev"
-
-
+        //当前页码
+        pageNth:1,
       }
     },
     computed:{
@@ -133,27 +129,6 @@
         get: function() {
           return this.checkedOn.length;
         }
-      },
-      //能完整显示页码的页码页数
-      pagesFull:function(){
-        return Math.floor( this.pagesTotal / this.pageNum );
-      },
-      //最后显示的页码数目
-      pagesLast:function(){
-        return ( this.pagesTotal % this.pageNum );
-      },
-      //前后翻页禁用的情况
-      pageDisabled:function(){
-        if(this.pageNth===1){
-          return "prev";
-        }else if(this.pageNth===this.pagesTotal){
-          return "next";
-        }
-        return "";
-      },
-      //当前的页码
-      pageNth:function(){
-        return (this.pageActive+(this.pagesNth-1)*this.pageNum);
       }
     },
     watch:{
@@ -167,10 +142,6 @@
             vm.checkedOn.push(item);
           });
         }
-      },
-      pageActive:function(val,oldVal){
-        // ajax
-        console.log(this.pageNth);
       },
       //页码改变事件
       pageNth:function(val,oldVal){
@@ -242,43 +213,6 @@
       },
       alert:function(tr){
         alert (tr.commodityId);
-      },
-      //切换页码
-      switchPage:function(agr){
-        var pagesTotal=this.pagesTotal;
-        var pageNth=this.pageNth;
-        var pageNum=this.pageNum;
-        var pageActive=this.pageActive;
-        var pageDisabled=this.pageDisabled;
-        if(agr==="prev"){
-          //如果是第一页，不做反应
-          if(pageNth===1){
-            return;
-          }
-          if(pageActive % pageNum === 1 ){
-            this.pagesNth--;
-            this.pageActive=pageNum;
-          }else{
-            this.pageActive--;
-          }
-          //当前页码更新
-          this.pageNth--;
-        }else if(agr=="next"){
-          //如果是最后一页，不做反应
-          if(pageNth===pagesTotal){
-            return;
-          }
-          if(pageActive % pageNum === 0 ){
-            this.pagesNth++;
-            this.pageActive=1;
-          }else {
-            this.pageActive++;
-          }
-          //当前页码更新
-          this.pageNth++;
-        }else{
-          this.pageActive=agr;
-        }
       },
       //批量上、下架
       switchChose:function(){

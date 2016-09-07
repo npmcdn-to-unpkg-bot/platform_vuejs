@@ -1,25 +1,7 @@
 <template>
   <div class="tab-pane fade" :class="{ 'in': activepage=='page2', 'active': activepage=='page2' }" id="page2">
      <dropdown :selected.sync='providers.selected' :default-opt='providers.default' :options='providers.options' :wrap-cls='["inline-block"]'></dropdown>
-     <!-- <div class="dropdown inline-block" >
-       <button class="btn btn-default dropdown-toggle search-item" data-sign="provider" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-         全部商家
-         <span class="caret"></span>
-       </button>
-       <ul class="dropdown-menu">
-         <li data-id="0">全部商家</li>
-       </ul>
-     </div> -->
      <dropdown :selected.sync='orderStatus.selected' :default-opt='orderStatus.default' :options='orderStatus.options' :wrap-cls='["inline-block"]'></dropdown>
-     <!-- <div class="dropdown inline-block">
-       <button class="btn btn-default dropdown-toggle search-item" data-sign="order" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-         全部订单
-         <span class="caret"></span>
-       </button>
-       <ul class="dropdown-menu">
-         <li data-id="0">全部订单</li>
-       </ul>
-     </div> -->
      <div class="form-group inline-block">
         <input type="date" class="form-control search-item" data-sign="start">
      </div>  开始时间
