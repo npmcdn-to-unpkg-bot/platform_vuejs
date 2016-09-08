@@ -72,7 +72,7 @@
     watch:{
       //页码改变事件
       pageNth:function(val,oldVal){
-        this.search();
+        this.search( { data:{ extend:true,content:{page:val} } } );
       },
       //监控当前页是否显示，若显示则加载动态下拉选项
       activepage:function(val,oldVal){
@@ -92,49 +92,39 @@
           })
         }
       }
-      //页码改变事件
-      // pageNth:function(val,oldVal){
-      //   this.$http.get("static/web/data/action/search?" + zj.serialize({page:val}) ).then(function(response){
-      //     var data=response.json();
-      //     if(data.success){
-      //       console.log("翻页成功");
-      //       this.trs=data.result.rows;
-      //       this.pagesTotal=data.result.total;
-      //     }else{
-      //       //可以加个图片提示错误
-      //       console.log("翻页失败，请稍后重试");
-      //     }
-      //   },function(response){
-      //     console.log("网络错误");
-      //   });
-      // }
     },
     methods:{
       //搜索
       search:function(opts){
-        // {
-        //   url:,
-        //   data:{},
-        //   success:function(response){
-        //
-        //   },
-        //   fail:function(response){
-        //
-        //   }
-        // }
+        /**
+         * opts 类型为对象，包含如下项：
+         *
+         * url:“”  -- ajax请求地址
+         * data:{ extend:false ,content:{} } -- ajax请求携带的数据 :extend 数据是否以扩展的形式  :content 数据内容
+         * success:function(){}  -- ajax请求成功后的回调
+         * fail:function(){} --ajax请求失败后的回调
+         */
+        //  debugger;
         var vm=this;
         opts=opts || {};
         var url= opts.url || "/static/web/data/action/orderSearch";
-        var data=opts.data || {provider:vm.providers.selected.text,order:vm.orderStatus.selected.text,start:zj.timeToDigit(vm.start),end:zj.timeToDigit(vm.end)};
+        var data=opts.data;
+        var searchItems={provider:vm.providers.selected.text,order:vm.orderStatus.selected.text,start:zj.timeToDigit(vm.start),end:zj.timeToDigit(vm.end)};
+        if( !data || data.extend ){
+          data= data ? data.content : {};
+          zj.extend(true,data,searchItems);
+        }else{
+          data=data.content;
+        }
         var success=opts.success || function(response){
           var data=response.json();
           console.log(data);
           if(data.success){
             this.trs=data.result.rows;
             this.pagesTotal=data.result.total;
-            console.log("搜索成功");
+            console.log("搜索/翻页成功");
           }else{
-            console.log("搜索失败: "+data.error);
+            console.log("搜索/翻页失败: "+data.error);
           }
         };
         var fail=opts.fail || function(response){

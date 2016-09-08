@@ -23,15 +23,15 @@ if (!String.prototype.trim) {
   };
 }
 
-/**
- * obj扩展方法
- */
- window.extend=function(){
 
- }
-
-/**
- * 创建zj对象，在该对象上挂载方法
+/** 创建zj对象，在该对象上挂载方法
+ *
+ * serialize -- 对象序列化
+ * timeToDigit -- 将时间转化为14位数值字符串
+ * timeFormat -- 将14位数值字符串转为对象
+ * typeof -- 判断数据类型
+ * extend -- 类似jQuery.extend的对象扩展方法
+ *
  */
 
 window.zj={};
@@ -94,3 +94,42 @@ zj.timeFormat=function(opts){
   }
 
 }
+//判断数据类型 (输出的字符串均为小写)
+zj.typeof=function(data){
+  var type=typeof data;
+  type=type.toLowerCase();
+  if( type === "object"){
+    type=Object.prototype.toString.call( data ).slice(8,-1).toLowerCase();
+  }
+  return type;
+}
+/*** obj扩展方法(类似jQuery.extend)，返回被扩展的对象扩展之后的状态
+ *
+ * @param deep (boolean) 是否深度扩展 (可省略，默认false)
+ * @param origin (object) 被扩展的对象
+ * @param extra (object) 用来扩展的对象
+ *
+ */
+ zj.extend=function(){
+   var deep,origin,extra;
+   if(typeof arguments[0] === "boolean"){
+     deep=arguments[0];
+     origin=arguments[1];
+     extra=arguments[2];
+   }else{
+     deep=false;
+     origin=arguments[0];
+     extra=arguments[1];
+   }
+   function loop(origin,extra){
+     for(var key in extra){
+       if( origin.hasOwnProperty(key) && deep && zj.typeof(extra[key])==="object" ){
+         loop( origin[key],extra[key] );
+       }else{
+         origin[key]=extra[key];
+       }
+     }
+   }
+   loop(origin,extra);
+   return origin;
+ }
