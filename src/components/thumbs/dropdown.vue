@@ -32,6 +32,8 @@
         menuShow:false
       }
     },
+    watch:{
+    },
     methods:{
       wrapClick:function(){
         this.menuShow=true;
@@ -45,6 +47,8 @@
   }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+  .inline-block{
+    margin-right:5px;
+  }
 </style>

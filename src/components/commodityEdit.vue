@@ -1,15 +1,10 @@
 <template>
   <div class="tab-pane fade clearfix" :class="{ 'in': activepage=='page1_2', 'active': activepage=='page1_2' }" id="page1_2">
-     <dropdown :selected.sync='brandNames.selected' :default-opt='brandNames.default' :options='brandNames.options' :wrap-cls='["inline-block"]'></dropdown>
-     <dropdown :selected.sync='sorts.selected' :default-opt='sorts.default' :options='sorts.options' :wrap-cls='["inline-block"]'></dropdown>
-     <dropdown :selected.sync='providers.selected' :default-opt='providers.default' :options='providers.options' :wrap-cls='["inline-block"]'></dropdown>
-     <dropdown :selected.sync='statuses.selected' :default-opt='statuses.default' :options='statuses.options' :wrap-cls='["inline-block"]'></dropdown>
-     <br>
-     <br>
-     <div class="form-group pull-left">
+     <dropdown v-for='item in [brandNames,sorts,providers,statuses]' :selected.sync='item.selected' :default-opt='item.default' :options='item.options' :wrap-cls='["inline-block"]'></dropdown>
+     <div class="form-group inline-block">
         <input type="text" class="form-control" v-model="keyword" placeholder="关键词（款号，商品名称）">
      </div>
-     <button type="button" @click="search" class="btn btn-primary pull-left search-btn">搜索</button>
+     <button type="button" @click="search" class="btn btn-primary inline-block search-btn">搜索</button>
      <div class="clearfix"></div>
      <div class="search-result" v-show="trs.length>0">
        <div class="table-wrap table-responsive">
@@ -68,9 +63,9 @@
     data () {
       return {
       /*搜索选项*/
-        brandNames:{ default:{id: 0,text: "全部品牌"},options:[{id: 1,text: "品牌1"},{id: 2,text: "品牌2"}],selected:{id: 0,text: "全部品牌"}},
-        sorts:{ default:{id: 0,text: "全部分类"},options:[{id: 1,text: "分类1"},{id: 2,text: "分类2"}],selected:{id: 0,text: "全部分类"} },
-        providers:{ default:{id: 0,text: "全部商家"},options:[{id: 1,text: "商家1"},{id: 2,text: "商家2"}],selected:{id: 0,text: "全部商家"} },
+        brandNames:{ default:{id: 0,text: "全部品牌"},options:[],selected:{id: 0,text: "全部品牌"}},
+        sorts:{ default:{id: 0,text: "全部分类"},options:[],selected:{id: 0,text: "全部分类"} },
+        providers:{ default:{id: 0,text: "全部商家"},options:[],selected:{id: 0,text: "全部商家"} },
         statuses:{ default:{id: 0,text: "全部"},options:[{id: 1,text: "出售中"},{id: 2,text: "仓库中"},{id: 2,text: "仓库中"}],selected:{id: 0,text: "全部"} },
         keyword:"",
       /*搜索结果列表*/
@@ -124,6 +119,26 @@
       }
     },
     watch:{
+      //监控当前页是否显示，若显示则加载动态下拉选项
+      activepage:function(val,oldVal){
+        var vm=this;
+        if(val==="page1_2"){
+          vm.$http.get("static/web/data/action/loadData").then(function(response){
+            var data=response.json();
+            var result=data.result;
+            if(data.success){
+              vm.brandNames.options=result.brandName;
+              vm.sorts.options=result.cateName;
+              vm.providers.options=result.provider;
+              console.log("动态下拉选项数据加载成功");
+            }else{
+              console.log("动态下拉选项数据加载失败: "+data.error);
+            }
+          },function(response){
+            console.log("动态下拉选项数据网络错误");
+          })
+        }
+      },
       allChecked:function(val,oldVal){
         var vm=this;
         // vm.trs.forEach(function(item,index,array){
@@ -137,12 +152,13 @@
       },
       //页码改变事件
       pageNth:function(val,oldVal){
-        this.$http.get("static/web/data/action/search?" + serialize({page:val}) ).then(function(response){
+        var vm=this;
+        this.$http.get("static/web/data/action/search?" + zj.serialize( {brandName:vm.brandNames.selected.text,cateName:vm.sorts.selected.text,provider:vm.providers.selected.text,status:vm.statuses.selected.text,keyword:this.keyword,page:val} ) ).then(function(response){
           var data=response.json();
           if(data.success){
             console.log("翻页成功");
-            this.trs=data.result.rows;
-            this.pagesTotal=data.result.total;
+            vm.trs=data.result.rows;
+            vm.pagesTotal=data.result.total;
           }else{
             //可以加个图片提示错误
             console.log("翻页失败，请稍后重试");
@@ -187,7 +203,7 @@
       //搜索
       search:function(){
         var vm=this;
-        this.$http.get("/static/web/data/action/search?"+serialize({brandName:this.brandNames.selected.text,cateName:this.sorts.selected.text,provider:this.providers.selected.text,status:this.statuses.selected.text,keyword:this.keyword}) ).then(function(response){
+        this.$http.get("/static/web/data/action/search?"+zj.serialize({brandName:vm.brandNames.selected.text,cateName:vm.sorts.selected.text,provider:vm.providers.selected.text,status:vm.statuses.selected.text,keyword:this.keyword}) ).then(function(response){
           var data=response.json();
           console.log(data);
           if(data.success){
@@ -196,8 +212,9 @@
               item.checked=false;
             })
             this.pagesTotal=data.result.total;
+            console.log("搜索成功");
           }else{
-            console.log("搜索失败，请重试");
+            console.log("搜索失败: "+data.error);
           }
         },function(response){
           console.log("网络错误");
@@ -218,7 +235,7 @@
           //批量下架
           url="/static/web/data/action/offshiefCommodity";
         }
-        this.$http.get( url+"?"+ serialize({commodityIds:checkedIds.join(",")}) ).then(function(response){
+        this.$http.get( url+"?"+ zj.serialize({commodityIds:checkedIds.join(",")}) ).then(function(response){
           var data=response.json();
           if(data.success){
             console.log("操作成功");
@@ -232,7 +249,7 @@
       },
       //批量删除
       deleteChose:function(){
-        this.$http.get("/static/web/data/action/onshiefCommodity?"+serialize({commodityIds:this.checkedIds.join(",")}) ).then(function(response){
+        this.$http.get("/static/web/data/action/onshiefCommodity?"+zj.serialize({commodityIds:this.checkedIds.join(",")}) ).then(function(response){
           var data=response.json();
           if(data.success){
             console.log("操作成功");
@@ -254,7 +271,7 @@
           //批量下架
           url="/static/web/data/action/offshiefCommodity";
         }
-        this.$http.get(url+"?"+serialize({commodityIds:tr.commodityId}) ).then(function(response){
+        this.$http.get(url+"?"+zj.serialize({commodityIds:tr.commodityId}) ).then(function(response){
           var data=response.json();
           if(data.success){
             console.log("操作成功");
@@ -269,7 +286,7 @@
       },
       //删除
       deleteCommodity:function(tr){
-        this.$http.get("/static/web/data/action/deleteCommodity?"+serialize({commodityIds:tr.commodityId}) ).then(function(response){
+        this.$http.get("/static/web/data/action/deleteCommodity?"+zj.serialize({commodityIds:tr.commodityId}) ).then(function(response){
           var data=response.json();
           if(data.success){
             console.log("操作成功");
@@ -287,7 +304,7 @@
 </script>
 
 <!-- scoped表示只在此模块中应用该样式 -->
-<style lang="scss" scoped>
+<style lang="scss">
   .search-result{
     display: block;
   }

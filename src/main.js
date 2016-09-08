@@ -6,9 +6,7 @@ new Vue({
   el: 'html',
   components: { App },
   methods:{
-    bodyclick:function(){
-      console.log(11111);
-    }
+
   }
 })
 
@@ -25,15 +23,21 @@ if (!String.prototype.trim) {
   };
 }
 
-/***全局函数
- *
- * serialize：对象序列化
- * timeToDigit: 将时间转化为14位数字字符串
- * timeFormat: 将14位数值字符串转为对象: timeObj--时间对象 ,timeStr--指定格式时间字符串
+/**
+ * obj扩展方法
+ */
+ window.extend=function(){
+
+ }
+
+/**
+ * 创建zj对象，在该对象上挂载方法
  */
 
+window.zj={};
+// function zj() {};
 //对象序列化
-window.serialize=function(obj){
+zj.serialize=function(obj){
   var str="";
   for(var key in obj){
     str+=key+"="+obj[key]+"&";
@@ -41,7 +45,7 @@ window.serialize=function(obj){
   return str.slice(0,-1);
 }
 //将时间转化为14位数值字符串
-window.timeToDigit=function(dateStr){
+zj.timeToDigit=function(dateStr){
   dateStr=dateStr.replace(/[^\d]+/g,"");
   var len=dateStr.length;
   if(len<14){
@@ -49,12 +53,11 @@ window.timeToDigit=function(dateStr){
   }
   return dateStr;
 }
-
 /***将14位数值字符串转为对象: timeObj--时间对象 ,timeStr--指定格式时间字符串
  *
  * @params opts(对象): type--输出时间格式  time--需要转换的纯数值字符串（14位）
  */
-window.timeFormat=function(opts){
+zj.timeFormat=function(opts){
   var type=opts.type;
   var time=opts.time+"";
   //type必须为格式字符串，形似 "yyyy-mm-dd hh:ff:ss"
