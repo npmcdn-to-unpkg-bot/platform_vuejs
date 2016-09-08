@@ -45,15 +45,7 @@
          <button type="button" class="btn btn-default inline-block" @click="switchChose" v-bind:style=" (upOrDown=='请选择' || upOrDown=='重新选择') && {'color':'#aaa','pointer-events':'none'}  ">{{ upOrDown }}</button>
          <button type="button" class="btn btn-default inline-block" @click="deleteChose">批量删除</button>
        </div>
-       <!-- <div class="page-wrap">
-         <ul class="pagination">
-           <li class="prev" :class="{'disabled': pageDisabled==='prev' }" @click="switchPage('prev')"><a href="javascript:;">&laquo;</a></li>
-           <li v-for="n in pageNum " :class="{'active': ( n+1 ) === pageActive }" v-show="!(pagesNth===pagesFull+1 && (n+1)>pagesExtra)" @click="switchPage(n+1)"><a href="javascript:;">{{ (n + 1) + ( pagesNth-1 )*pageNum }}</a></li>
-           <li class="next" :class="{'disabled': pageDisabled==='next' }"  @click="switchPage('next')"><a href="javascript:;">&raquo;</a></li>
-         </ul>
-       </div> -->
        <pager :pages-total='pagesTotal' :page-num='pageNum' :page-nth.sync='pageNth' ></pager>
-
      </div>
   </div>
 </template>
@@ -145,7 +137,7 @@
       },
       //页码改变事件
       pageNth:function(val,oldVal){
-        this.$http.get("static/web/data/action/search?page="+val ).then(function(response){
+        this.$http.get("static/web/data/action/search?" + serialize({page:val}) ).then(function(response){
           var data=response.json();
           if(data.success){
             console.log("翻页成功");
@@ -195,7 +187,7 @@
       //搜索
       search:function(){
         var vm=this;
-        this.$http.get("/static/web/data/action/search?"+"brandName="+this.brandNames.selected.text+"&"+"cateName="+this.sorts.selected.text+"&"+"provider="+this.providers.selected.text+"&"+"status="+this.statuses.selected.text+"&"+"keyword="+this.keyword).then(function(response){
+        this.$http.get("/static/web/data/action/search?"+serialize({brandName:this.brandNames.selected.text,cateName:this.sorts.selected.text,provider:this.providers.selected.text,status:this.statuses.selected.text,keyword:this.keyword}) ).then(function(response){
           var data=response.json();
           console.log(data);
           if(data.success){
@@ -226,7 +218,7 @@
           //批量下架
           url="/static/web/data/action/offshiefCommodity";
         }
-        this.$http.get(url+"?commodityIds="+checkedIds.join(",")).then(function(response){
+        this.$http.get( url+"?"+ serialize({commodityIds:checkedIds.join(",")}) ).then(function(response){
           var data=response.json();
           if(data.success){
             console.log("操作成功");
@@ -240,7 +232,7 @@
       },
       //批量删除
       deleteChose:function(){
-        this.$http.get("/static/web/data/action/onshiefCommodity?commodityIds="+this.checkedIds.join(",")).then(function(response){
+        this.$http.get("/static/web/data/action/onshiefCommodity?"+serialize({commodityIds:this.checkedIds.join(",")}) ).then(function(response){
           var data=response.json();
           if(data.success){
             console.log("操作成功");
@@ -262,7 +254,7 @@
           //批量下架
           url="/static/web/data/action/offshiefCommodity";
         }
-        this.$http.get(url+"?commodityIds="+tr.commodityId).then(function(response){
+        this.$http.get(url+"?"+serialize({commodityIds:tr.commodityId}) ).then(function(response){
           var data=response.json();
           if(data.success){
             console.log("操作成功");
@@ -277,7 +269,7 @@
       },
       //删除
       deleteCommodity:function(tr){
-        this.$http.get("/static/web/data/action/deleteCommodity?commodityIds="+tr.commodityId).then(function(response){
+        this.$http.get("/static/web/data/action/deleteCommodity?"+serialize({commodityIds:tr.commodityId}) ).then(function(response){
           var data=response.json();
           if(data.success){
             console.log("操作成功");
