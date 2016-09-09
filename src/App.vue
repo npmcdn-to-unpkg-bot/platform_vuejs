@@ -14,31 +14,8 @@
     <!-- 品牌管理 -->
     <brand-manage :activepage="activepage"></brand-manage>
 
+    <!-- 模态框 -->
     <modal :fade.sync="modal_fade" :show.sync="modal_show" :title.sync="modal_title" :body.sync="modal_body" :footer.sync="modal_footer" ></modal>
-    <!-- bootstrap模态框 -->
-    <!-- <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-       aria-labelledby="myModalLabel" aria-hidden="true">
-       <div class="modal-dialog">
-          <div class="modal-content">
-             <div class="modal-header">
-                <button type="button" class="close"
-                   data-dismiss="modal" aria-hidden="true">
-                      &times;
-                </button>
-                <h4 class="modal-title" id="myModalLabel">
-                   提交状态
-                </h4>
-             </div>
-             <div class="modal-body">
-             </div>
-             <div class="modal-footer">
-                <button type="button" class="btn btn-default"
-                   data-dismiss="modal">确认
-                </button>
-             </div>
-          </div>
-        </div>
-    </div> -->
 
   </div>
 
@@ -61,6 +38,8 @@ export default {
   },
   data () {
     return{
+      //各页面信息
+      //有二级菜单的项有open和dropdown属性
       pages:[
               { id:"page1",text:"商品管理",open:false,dropdown:[ {id:"page1_1",text:"商品上传"},{ id:"page1_2",text:"商品编辑" } ] } ,
               { id:"page2",text:"订单管理" } ,
@@ -68,6 +47,7 @@ export default {
               { id:"page4",text:"品牌管理" } ,
               { id:"page5",text:"营销" }
             ],
+      //当前显示页的id
       activepage:"page1_1",
       //模态框参数
       modal_fade:"",
@@ -78,19 +58,15 @@ export default {
     }
   },
   events:{
+
     'modal-show':function(msg){
       // debugger;
       console.log(msg);
-      // for(var key in msg){
-      //   this["modal_"+key]=msg[key];
-      // }
-
-      this.modal_fade=msg.fade;
-      this.modal_show=msg.show;
-      this.modal_title=msg.title;
-      this.modal_body=msg.body;
-      this.modal_footer=msg.footer;
+      for(var key in msg){
+        this["modal_"+key]=msg[key];
+      }
     }
+
   }
 }
 

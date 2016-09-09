@@ -29,15 +29,19 @@
     props:{'fade':{default:true},'show':null,'title':null,'body':null,'footer':null},
     data(){
       return{
+        //控制模态框display属性
         display:'none',
+        //控制模态框opacity属性
         in:false
       }
     },
     watch:{
       show:function(val,oldVal){
-        //注意：要实现动画效果(opacity),需满足以下条件：
-        //modal出现时：需先设置display:block,再设置opacity:1
-        //modal消失时：需等opacity动画(bootstrap设置为150ms)完后再设置display:none
+        /**
+         * 注意：要实现动画效果(opacity),需满足以下条件：
+         * modal出现时：需先设置display:block,再设置opacity:1
+         * modal消失时：需等opacity动画(bootstrap设置为150ms)完后再设置display:none
+         */
         var vm=this;
         if(val){
           vm.display="block";
@@ -52,8 +56,13 @@
           // vm.$nextTick(function(){
           //   vm.display="none";
           // })
+
+          //模态框消失后清空数据
           setTimeout(function(){
             vm.display="none";
+            vm.title="";
+            vm.body="";
+            vm.footer="";
           },150)
         }
       }
@@ -79,7 +88,7 @@
       right:0;
       top:0;
       bottom:0;
-      z-index:1000;
+      z-index:2016;
     }
   }
 </style>

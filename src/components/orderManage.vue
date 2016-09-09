@@ -9,7 +9,7 @@
         <input type="datetime-local" class="form-control" v-model="end">
      </div>  结束时间
      <button type="button" @click="search" class="btn btn-primary search-btn" >搜索</button>
-     <button type="button" class="btn btn-primary order-export">导出订单</button>
+     <button type="button" @click="exportOrder" class="btn btn-primary order-export">导出订单</button>
      <div class="search-result" v-show="trs.length>0">
        <div class="table-wrap">
          <table class="table table-bordered pagination-item active">
@@ -72,7 +72,15 @@
     watch:{
       //页码改变事件
       pageNth:function(val,oldVal){
-        this.search( { data:{ extend:true,content:{page:val} } } );
+        this.search({
+          data:{
+            extend:true,
+            content:{
+              page:val
+            }
+          }
+        });
+        // this.search( { data:{ extend:true,content:{page:val} } } );
       },
       //监控当前页是否显示，若显示则加载动态下拉选项
       activepage:function(val,oldVal){
@@ -85,10 +93,10 @@
               vm.providers.options=result.provider;
               console.log("动态下拉选项数据加载成功");
             }else{
-              console.log("动态下拉选项数据加载失败: "+data.error);
+              this.$dispatch('modal-show', {fade:true,show:true,title:"信息提示",body:"动态下拉选项数据加载失败："+data.error});
             }
           },function(response){
-            console.log("动态下拉选项数据网络错误");
+            this.$dispatch('modal-show', {fade:true,show:true,title:"信息提示",body:"动态下拉选项数据网络错误"});
           })
         }
       }
@@ -99,7 +107,7 @@
         /**
          * opts 类型为对象，包含如下项：
          *
-         * url:“”  -- ajax请求地址
+         * url:""  -- ajax请求地址
          * data:{ extend:false ,content:{} } -- ajax请求携带的数据 :extend 数据是否以扩展的形式  :content 数据内容
          * success:function(){}  -- ajax请求成功后的回调
          * fail:function(){} --ajax请求失败后的回调
@@ -124,14 +132,30 @@
             this.pagesTotal=data.result.total;
             console.log("搜索/翻页成功");
           }else{
-            console.log("搜索/翻页失败: "+data.error);
+            this.$dispatch('modal-show', {fade:true,show:true,title:"信息提示",body:"搜索/翻页失败："+data.error});
           }
         };
         var fail=opts.fail || function(response){
-          console.log("网络错误");
+          this.$dispatch('modal-show', {fade:true,show:true,title:"信息提示",body:"网络错误"});
         };
         this.$http.get( url + "?" +zj.serialize(data) ).then(success,fail);
+      },
+      //导出订单
+      exportOrder:function(){
+        this.search({
+          url:'/web/data/action/exportOrder',
+          success:function(response){
+            var data=response.json();
+            if(data.success){
+              window.open(data.result);
+              this.$dispatch('modal-show', {fade:true,show:true,title:"信息提示",body:"请前往打开的新窗口/标签页"});
+            }else{
+              this.$dispatch('modal-show', {fade:true,show:true,title:"信息提示",body:"导出数据失败："+data.error});
+            }
+          }
+        })
       }
+
     }
   }
 </script>

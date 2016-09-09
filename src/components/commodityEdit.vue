@@ -162,11 +162,10 @@
             vm.trs=data.result.rows;
             vm.pagesTotal=data.result.total;
           }else{
-            //可以加个图片提示错误
-            console.log("翻页失败，请稍后重试");
+            this.$dispatch('modal-show', {fade:true,show:true,title:"信息提示",body:"翻页失败: "+data.error});
           }
         },function(response){
-          console.log("网络错误");
+          this.$dispatch('modal-show', {fade:true,show:true,title:"信息提示",body:"网络错误"});
         });
       },
       checkedOn:function(val,oldVal){
@@ -216,10 +215,10 @@
             this.pagesTotal=data.result.total;
             console.log("搜索成功");
           }else{
-            console.log("搜索失败: "+data.error);
+            this.$dispatch('modal-show', {fade:true,show:true,title:"信息提示",body:"搜索失败: "+data.error});
           }
         },function(response){
-          console.log("网络错误");
+          this.$dispatch('modal-show', {fade:true,show:true,title:"信息提示",body:"网络错误"});
         });
       },
       //批量上、下架
@@ -237,13 +236,13 @@
         this.$http.get( url+"?"+ zj.serialize({commodityIds:checkedIds.join(",")}) ).then(function(response){
           var data=response.json();
           if(data.success){
-            console.log("操作成功");
+            this.$dispatch('modal-show', {fade:true,show:true,title:"信息提示",body:"操作成功"});
 
           }else{
-            console.log("操作失败，请稍后重试");
+            this.$dispatch('modal-show', {fade:true,show:true,title:"信息提示",body:"操作失败："+data.error});
           }
         },function(response){
-          console.log("网络错误");
+          this.$dispatch('modal-show', {fade:true,show:true,title:"信息提示",body:"网络错误"});
         })
       },
       //批量删除
@@ -251,17 +250,18 @@
         this.$http.get("/static/web/data/action/onshiefCommodity?"+zj.serialize({commodityIds:this.checkedIds.join(",")}) ).then(function(response){
           var data=response.json();
           if(data.success){
-            console.log("操作成功");
+            this.$dispatch('modal-show', {fade:true,show:true,title:"信息提示",body:"操作成功"});
           }else{
-            console.log("操作失败，请稍后重试");
+            this.$dispatch('modal-show', {fade:true,show:true,title:"信息提示",body:"操作失败："+data.error});
           }
         },function(response){
-          console.log("网络错误");
+          this.$dispatch('modal-show', {fade:true,show:true,title:"信息提示",body:"网络错误"});
         })
       },
     //单个商品操作
       //切换上、下架
       switchStatus:function(tr){
+        var vm=this;
         var url;
         if(tr.status==0){
           //批量上架
@@ -270,17 +270,22 @@
           //批量下架
           url="/static/web/data/action/offshiefCommodity";
         }
-        this.$http.get(url+"?"+zj.serialize({commodityIds:tr.commodityId}) ).then(function(response){
+        vm.$http.get(url+"?"+zj.serialize({commodityIds:tr.commodityId}) ).then(function(response){
           var data=response.json();
           if(data.success){
-            console.log("操作成功");
-            //操作成功后，修改商品状态
-            tr.status=1-tr.status;
+            vm.$dispatch('modal-show', {fade:true,show:true,title:"信息提示",body:"操作成功"});
+            //特殊情况处理：选中的行改变状态（上/下架）时，具体如下：
+            vm.checkedOn=vm.checkedOn.map(function(item,index,array){
+              if( item.trim() === JSON.stringify({'commodityId':tr.commodityId,'status':tr.status}).trim() ){
+                return JSON.stringify({'commodityId':tr.commodityId,'status':tr.status=1-tr.status});
+              }
+              return item;
+            });
           }else{
-            console.log("操作失败，请稍后重试");
+            vm.$dispatch('modal-show', {fade:true,show:true,title:"信息提示",body:"操作失败："+data.error});
           }
         },function(response){
-          console.log("网络错误");
+          vm.$dispatch('modal-show', {fade:true,show:true,title:"信息提示",body:"网络错误"});
         })
       },
       //删除
@@ -288,14 +293,12 @@
         this.$http.get("/static/web/data/action/deleteCommodity?"+zj.serialize({commodityIds:tr.commodityId}) ).then(function(response){
           var data=response.json();
           if(data.success){
-            console.log("操作成功");
-            // debugger;
-            this.$dispatch('modal-show', {fade:true,show:true})
+            this.$dispatch('modal-show', {fade:true,show:true,title:"信息提示",body:"操作成功"});
           }else{
-            console.log("操作失败，请稍后重试");
+            this.$dispatch('modal-show', {fade:true,show:true,title:"信息提示",body:"操作失败："+data.error});
           }
         },function(response){
-          console.log("网络错误");
+          this.$dispatch('modal-show', {fade:true,show:true,title:"信息提示",body:"网络错误"});
         })
       }
     },
