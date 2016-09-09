@@ -14,7 +14,8 @@
                <tr>
                   <th>
                       <label>
-                       <input type="checkbox" class="select-all" v-model="selectAll"> 全选
+                       <!-- <input type="checkbox" class="select-all" v-model="selectAll"> 全选 -->
+                       <input type="checkbox" class="select-all" v-model="selectAll" v-check-all="selectAll" v-bind:checked-data="checkedOn"> 全选
                       </label>
                   </th>
                   <th v-for='list in ["商品名称","一级分类","款号","商家","品牌","生成方式","邮费","吊牌价","最低起批量","库存值","商品描述","操作"]'>{{list}}</th>
@@ -70,7 +71,7 @@
         keyword:"",
       /*搜索结果列表*/
         //全选框
-        allChecked:false,
+        selectAll:false,
         //选中的行
         checkedOn:[],
         checkedIds:[],
@@ -93,30 +94,30 @@
     },
     computed:{
       // 全选checkbox绑定的model
-      selectAll: {
-        get: function() {
-          return this.checkedCount == this.trs.length;
-        },
-        set: function(value) {
-          if (value) {
-            this.checkedOn = this.trs.map(function(item) {
-              //保存json字符串格式
-              return JSON.stringify({
-                'commodityId':item.commodityId,
-                'status':item.status
-              });
-
-            })
-          } else {
-            this.checkedOn = [];
-          }
-        }
-      },
-      checkedCount: {
-        get: function() {
-          return this.checkedOn.length;
-        }
-      }
+      // selectAll: {
+      //   get: function() {
+      //     return this.checkedCount == this.trs.length;
+      //   },
+      //   set: function(value) {
+      //     if (value) {
+      //       this.checkedOn = this.trs.map(function(item) {
+      //         //保存json字符串格式
+      //         return JSON.stringify({
+      //           'commodityId':item.commodityId,
+      //           'status':item.status
+      //         });
+      //
+      //       })
+      //     } else {
+      //       this.checkedOn = [];
+      //     }
+      //   }
+      // },
+      // checkedCount: {
+      //   get: function() {
+      //     return this.checkedOn.length;
+      //   }
+      // }
     },
     watch:{
       //监控当前页是否显示，若显示则加载动态下拉选项
@@ -139,17 +140,17 @@
           })
         }
       },
-      allChecked:function(val,oldVal){
-        var vm=this;
-        // vm.trs.forEach(function(item,index,array){
-        //   vm.checkedOn.$remove(item);
-        // });
-        if(val==true){
-          vm.trs.forEach(function(item,index,array){
-            vm.checkedOn.push(item);
-          });
-        }
-      },
+      // allChecked:function(val,oldVal){
+      //   var vm=this;
+      //   // vm.trs.forEach(function(item,index,array){
+      //   //   vm.checkedOn.$remove(item);
+      //   // });
+      //   if(val==true){
+      //     vm.trs.forEach(function(item,index,array){
+      //       vm.checkedOn.push(item);
+      //     });
+      //   }
+      // },
       //页码改变事件
       pageNth:function(val,oldVal){
         var vm=this;
@@ -297,6 +298,35 @@
         },function(response){
           console.log("网络错误");
         })
+      }
+    },
+    directives:{
+      //指令内部的this指向这个指令对象
+      'check-all':{
+        twoWay:true,
+        params:['checkedData'],
+        paramWatchers:{
+          checkedData:function(val,oldVal){
+            this.vm.selectAll= ( this.vm.trs.length === this.vm.checkedOn.length );
+          }
+        },
+        bind:function(){
+
+        },
+        update:function(val){
+          if(val){
+            this.vm.checkedOn = this.vm.trs.map(function(item) {
+              //保存json字符串格式
+              return JSON.stringify({
+                'commodityId':item.commodityId,
+                'status':item.status
+              });
+
+            })
+          }else{
+            this.checkedOn=[];
+          }
+        }
       }
     }
   }
