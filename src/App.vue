@@ -16,7 +16,6 @@
 
     <!-- 模态框 -->
     <modal :fade.sync="modal_fade" :show.sync="modal_show" :title.sync="modal_title" :body.sync="modal_body" :footer.sync="modal_footer" ></modal>
-
   </div>
 
 </template>
