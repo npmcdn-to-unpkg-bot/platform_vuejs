@@ -56,6 +56,7 @@
   import dropdown from './thumbs/dropdown';
   import pager from './thumbs/pager';
 
+
   export default {
     components: {
       dropdown,pager
@@ -221,9 +222,6 @@
           console.log("网络错误");
         });
       },
-      alert:function(tr){
-        alert (tr.commodityId);
-      },
       //批量上、下架
       switchChose:function(){
         var url;
@@ -291,7 +289,8 @@
           var data=response.json();
           if(data.success){
             console.log("操作成功");
-
+            // debugger;
+            this.$dispatch('modal-show', {fade:true,show:true})
           }else{
             console.log("操作失败，请稍后重试");
           }

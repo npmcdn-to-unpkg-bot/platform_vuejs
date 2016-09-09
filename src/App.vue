@@ -14,6 +14,7 @@
     <!-- 品牌管理 -->
     <brand-manage :activepage="activepage"></brand-manage>
 
+    <modal :fade.sync="modal_fade" :show.sync="modal_show" :title.sync="modal_title" :body.sync="modal_body" :footer.sync="modal_footer" ></modal>
     <!-- bootstrap模态框 -->
     <!-- <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
        aria-labelledby="myModalLabel" aria-hidden="true">
@@ -43,17 +44,20 @@
 
 </template>
 <script>
-//组件注册和引用
+/*组件注册和引用*/
+//页面组件
 import sideNav from './components/sideNav';
 import commodityUpload from "./components/commodityUpload";
 import commodityEdit from "./components/commodityEdit";
 import orderManage from './components/orderManage';
 import providerManage from './components/providerManage';
 import brandManage from './components/brandManage';
+//功能组件
+import modal from './components/thumbs/modal';
 
 export default {
   components: {
-    sideNav,commodityUpload,commodityEdit,orderManage,providerManage,brandManage
+    sideNav,commodityUpload,commodityEdit,orderManage,providerManage,brandManage,modal
   },
   data () {
     return{
@@ -64,11 +68,29 @@ export default {
               { id:"page4",text:"品牌管理" } ,
               { id:"page5",text:"营销" }
             ],
-      activepage:"page1_1"
+      activepage:"page1_1",
+      //模态框参数
+      modal_fade:"",
+      modal_show:"",
+      modal_title:"",
+      modal_body:"",
+      modal_footer:""
     }
   },
   events:{
+    'modal-show':function(msg){
+      // debugger;
+      console.log(msg);
+      // for(var key in msg){
+      //   this["modal_"+key]=msg[key];
+      // }
 
+      this.modal_fade=msg.fade;
+      this.modal_show=msg.show;
+      this.modal_title=msg.title;
+      this.modal_body=msg.body;
+      this.modal_footer=msg.footer;
+    }
   }
 }
 
@@ -93,4 +115,5 @@ export default {
       display: block !important;
     }
   }
+
 </style>
